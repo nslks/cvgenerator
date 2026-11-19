@@ -99,9 +99,23 @@
   \usepackage{fontspec}
   \usepackage{polyglossia}
   \setdefaultlanguage{german}
-  \defaultfontfeatures{Ligatures=TeX}
-  \setmainfont{TeX Gyre Heros}
-  \setsansfont{TeX Gyre Heros}
+  % No contextual alternates: Inter swaps + - ( ) next to digits for glyphs without
+  % a Unicode mapping, so ATS parsers would read C++20 as C20.
+  \defaultfontfeatures{Ligatures=TeX,RawFeature={-calt}}
+  % SemiBold where the font has it: a full bold looks heavy in Inter.
+  \IfFontExistsTF{Inter SemiBold}{%
+    \setmainfont{Inter}[BoldFont={* SemiBold}]
+    \setsansfont{Inter}[BoldFont={* SemiBold}]
+  }{%
+    \setmainfont{Inter}
+    \setsansfont{Inter}
+  }
+  % The name uses the display cut where there is one: it is drawn for large sizes.
+  \IfFontExistsTF{Inter Display}{%
+    \newfontfamily\cvnamefont{Inter Display}[BoldFont={* Bold}]
+  }{%
+    \newcommand{\cvnamefont}{}
+  }
   
   \usepackage[a4paper,top=10mm,bottom=10mm,left=15mm,right=15mm]{geometry}
   \usepackage{xcolor}
@@ -141,7 +155,7 @@
   
   \newcommand{\cvsection}[1]{%
     \vspace{2.4ex}%
-    {\fontsize{14}{15.5}\selectfont\bfseries\color{cvblue}\MakeUppercase{#1}}\par\nobreak
+    {\fontsize{13}{14.5}\selectfont\bfseries\color{cvblue}\MakeUppercase{#1}}\par\nobreak
     \vspace{-0.1ex}\brushrule\vspace{1.2ex}%
   }
   
@@ -154,22 +168,25 @@
     \xspaceskip=\spaceskip
     \linepenalty=1000\relax}
   \newenvironment{cvpoints}{%
-    \begin{itemize}[leftmargin=1.05em,labelsep=.45em,itemsep=3.2pt,topsep=2.8pt,
-      partopsep=0pt,parsep=0pt,before=\cvragged,label={\color{cvtext}\raisebox{.15ex}{\scriptsize--}}]%
+    \begin{itemize}[leftmargin=1.05em,labelsep=.45em,itemsep=3.7pt,topsep=3.2pt,
+      partopsep=0pt,parsep=0pt,before=\cvragged,label={\color{cvblue}\small\textbullet}]%
   }{\end{itemize}}
   
+  % Skill group label: small bold caps in the accent colour.
+  \newcommand{\cvlabel}[1]{{\fontsize{9}{10}\selectfont\bfseries\color{cvblue}\MakeUppercase{#1}}\enspace}
+  
   \begin{document}
-  \fontsize{11.4}{15.1}\selectfont
+  \fontsize{10.4}{14.7}\selectfont
   
   % Header: the document remains single-column; the portrait is a compact identity
   % element inside the header rather than a permanent sidebar.
   \begin{tabularx}{\textwidth}{@{}X >{\raggedleft\arraybackslash}m{27mm}@{}}
     \begin{minipage}[c]{\linewidth}
-      {\fontsize{25}{27}\selectfont\bfseries\color{cvblue}\MakeUppercase{Erika Musterfrau}}\par
+      {\cvnamefont\fontsize{25}{27}\selectfont\bfseries\color{cvblue}\MakeUppercase{Erika Musterfrau}}\par
       \vspace{0.4ex}
-      {\fontsize{12.2}{13.6}\selectfont\bfseries Softwareentwicklerin – Backend \& Platform}\par
+      {\fontsize{11.4}{13}\selectfont\bfseries Softwareentwicklerin – Backend \& Platform}\par
       \vspace{1.0ex}
-      {\fontsize{10.4}{13}\selectfont\color{cvmuted}
+      {\fontsize{9.4}{12.4}\selectfont\color{cvmuted}
         Berlin \textperiodcentered{}
         \href{mailto:erika@example.com}{erika@example.com}
         \textperiodcentered{} +49 151 12345678\par
@@ -183,9 +200,9 @@
   \vspace{-0.3ex}
   \brushrule
   
-  \cvsection{Erfahrung}
-  {\fontsize{11.4}{12.7}\selectfont\bfseries\color{cvblue}
-  04/2022--heute
+  \cvsection{Berufserfahrung}
+  {\fontsize{10.4}{12.7}\selectfont\bfseries\color{cvblue}
+  04/2022 -- heute
   \textperiodcentered{} Senior Backend Engineer
   \textperiodcentered{} Acme GmbH
   \textperiodcentered{} Berlin}\par
@@ -196,8 +213,8 @@
   {\footnotesize\color{cvmuted}\textbf{\color{cvblue}Tech:}
   Python \textperiodcentered{} FastAPI \textperiodcentered{} PostgreSQL \textperiodcentered{} Kafka \textperiodcentered{} Kubernetes \textperiodcentered{} Terraform}\par
   \vspace{1.6ex}
-  {\fontsize{11.4}{12.7}\selectfont\bfseries\color{cvblue}
-  04/2020--03/2022
+  {\fontsize{10.4}{12.7}\selectfont\bfseries\color{cvblue}
+  04/2020 -- 03/2022
   \textperiodcentered{} Backend Engineer
   \textperiodcentered{} Beta Solutions AG
   \textperiodcentered{} Hamburg}\par
@@ -206,24 +223,24 @@
   \end{cvpoints}
   {\footnotesize\color{cvmuted}\textbf{\color{cvblue}Tech:}
   C\# \textperiodcentered{} .NET \textperiodcentered{} MSSQL \textperiodcentered{} RabbitMQ}\par
-  \vspace{1.6ex}
-  \cvsection{Bildungsweg}
+  \cvsection{Ausbildung \& Sprachen}
   {\bfseries\color{cvblue}
-  10/2016--03/2020
+  10/2016 -- 03/2020
   \textperiodcentered{} B.Sc. Informatik}\par
   TU Berlin\par
-  
-  \cvsection{Technische Kenntnisse}
-  {\fontsize{10.4}{13.8}\selectfont
-  \textbf{Sprachen:} Python \textperiodcentered{} C\# \textperiodcentered{} TypeScript\par
-  \textbf{Backend:} FastAPI \textperiodcentered{} .NET \textperiodcentered{} PostgreSQL \textperiodcentered{} Kafka\par
-  \textbf{DevOps:} Docker \textperiodcentered{} Kubernetes \textperiodcentered{} Terraform \textperiodcentered{} GitHub Actions\par
-  \textbf{Methoden:} DDD \textperiodcentered{} TDD \textperiodcentered{} Trunk-Based Development \textperiodcentered{} Scrum\par
-  \textbf{Sprachen:}
+  \vspace{1.0ex}
+  {\bfseries\color{cvblue}Sprachen}\par
   Deutsch (Muttersprache) \textperiodcentered{} 
   Englisch (C1) \textperiodcentered{} 
   Türkisch (C1)
   \par
+  
+  \cvsection{Technische Kenntnisse}
+  {\fontsize{10.4}{14}\selectfont
+  \cvlabel{Sprachen}Python \textperiodcentered{} C\# \textperiodcentered{} TypeScript\par
+  \cvlabel{Backend}FastAPI \textperiodcentered{} .NET \textperiodcentered{} PostgreSQL \textperiodcentered{} Kafka\par
+  \cvlabel{DevOps}Docker \textperiodcentered{} Kubernetes \textperiodcentered{} Terraform \textperiodcentered{} GitHub Actions\par
+  \cvlabel{Methoden}DDD \textperiodcentered{} TDD \textperiodcentered{} Trunk-Based Development \textperiodcentered{} Scrum\par
   }
   
   

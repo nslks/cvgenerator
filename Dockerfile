@@ -12,7 +12,7 @@ FROM debian:trixie-slim
 # texlive-xetex: xelatex + fontspec  | latex-recommended: geometry, hyperref, xcolor, microtype
 # latex-extra: enumitem, titlesec,     | fonts-recommended: Latin Modern
 #   paracol, eso-pic, xltabular        | pictures: tikz/pgf for the skill bars
-# lang-german: hyphenation patterns    | fonts-texgyre + fontconfig: resolve fonts by name
+# lang-german: hyphenation patterns    | fonts-texgyre, fonts-inter + fontconfig: resolve fonts by name
 RUN apt-get update && apt-get install -y --no-install-recommends \
         python3 \
         python3-venv \
@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         texlive-pictures \
         texlive-lang-german \
         fonts-texgyre \
+        fonts-inter \
         fontconfig \
  && fc-cache -f \
  && rm -rf /var/lib/apt/lists/*

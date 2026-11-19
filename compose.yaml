@@ -15,3 +15,5 @@ services:
       # the mounted sources win over the wheel installed in /opt/venv. Without
       # this, `build: .` silently keeps serving a stale image after src/ changes.
       PYTHONPATH: /work/src
+      # The mount can report stale mtimes, so cached bytecode would outlive an edit.
+      PYTHONDONTWRITEBYTECODE: "1"

@@ -3,9 +3,23 @@
 \usepackage{fontspec}
 \usepackage{polyglossia}
 \setdefaultlanguage{\VAR{ labels.document_language }}
-\defaultfontfeatures{Ligatures=TeX}
-\setmainfont{\VAR{ cv.theme.font_sans }}
-\setsansfont{\VAR{ cv.theme.font_sans }}
+% No contextual alternates: Inter swaps + - ( ) next to digits for glyphs without
+% a Unicode mapping, so ATS parsers would read C++20 as C20.
+\defaultfontfeatures{Ligatures=TeX,RawFeature={-calt}}
+% SemiBold where the font has it: a full bold looks heavy in Inter.
+\IfFontExistsTF{\VAR{ cv.theme.font_sans } SemiBold}{%
+  \setmainfont{\VAR{ cv.theme.font_sans }}[BoldFont={* SemiBold}]
+  \setsansfont{\VAR{ cv.theme.font_sans }}[BoldFont={* SemiBold}]
+}{%
+  \setmainfont{\VAR{ cv.theme.font_sans }}
+  \setsansfont{\VAR{ cv.theme.font_sans }}
+}
+% The name uses the display cut where there is one: it is drawn for large sizes.
+\IfFontExistsTF{\VAR{ cv.theme.font_sans } Display}{%
+  \newfontfamily\cvnamefont{\VAR{ cv.theme.font_sans } Display}[BoldFont={* Bold}]
+}{%
+  \newcommand{\cvnamefont}{}
+}
 
 \usepackage[a4paper,top=10mm,bottom=10mm,left=15mm,right=15mm]{geometry}
 \usepackage{xcolor}
@@ -45,7 +59,7 @@
 
 \newcommand{\cvsection}[1]{%
   \vspace{2.4ex}%
-  {\fontsize{14}{15.5}\selectfont\bfseries\color{cvblue}\MakeUppercase{#1}}\par\nobreak
+  {\fontsize{13}{14.5}\selectfont\bfseries\color{cvblue}\MakeUppercase{#1}}\par\nobreak
   \vspace{-0.1ex}\brushrule\vspace{1.2ex}%
 }
 
@@ -58,23 +72,26 @@
   \xspaceskip=\spaceskip
   \linepenalty=1000\relax}
 \newenvironment{cvpoints}{%
-  \begin{itemize}[leftmargin=1.05em,labelsep=.45em,itemsep=3.2pt,topsep=2.8pt,
-    partopsep=0pt,parsep=0pt,before=\cvragged,label={\color{cvtext}\raisebox{.15ex}{\scriptsize--}}]%
+  \begin{itemize}[leftmargin=1.05em,labelsep=.45em,itemsep=3.7pt,topsep=3.2pt,
+    partopsep=0pt,parsep=0pt,before=\cvragged,label={\color{cvblue}\small\textbullet}]%
 }{\end{itemize}}
 
+% Skill group label: small bold caps in the accent colour.
+\newcommand{\cvlabel}[1]{{\fontsize{9}{10}\selectfont\bfseries\color{cvblue}\MakeUppercase{#1}}\enspace}
+
 \begin{document}
-\fontsize{11.4}{15.1}\selectfont
+\fontsize{10.4}{14.7}\selectfont
 
 % Header: the document remains single-column; the portrait is a compact identity
 % element inside the header rather than a permanent sidebar.
 \begin{tabularx}{\textwidth}{@{}X >{\raggedleft\arraybackslash}m{27mm}@{}}
   \begin{minipage}[c]{\linewidth}
-    {\fontsize{25}{27}\selectfont\bfseries\color{cvblue}\MakeUppercase{\VAR{ cv.header.name | tex }}}\par
+    {\cvnamefont\fontsize{25}{27}\selectfont\bfseries\color{cvblue}\MakeUppercase{\VAR{ cv.header.name | tex }}}\par
     \vspace{0.4ex}
-    {\fontsize{12.2}{13.6}\selectfont\bfseries \VAR{ cv.header.title | tex }}\par
+    {\fontsize{11.4}{13}\selectfont\bfseries \VAR{ cv.header.title | tex }}\par
     \vspace{1.0ex}
     %% set c = cv.header.contact
-    {\fontsize{10.4}{13}\selectfont\color{cvmuted}
+    {\fontsize{9.4}{12.4}\selectfont\color{cvmuted}
       \VAR{ c.location | tex } \textperiodcentered{}
       \href{mailto:\VAR{ c.email }}{\VAR{ c.email | tex }}\BLOCK{ if c.phone }
       \textperiodcentered{} \VAR{ c.phone | tex }\BLOCK{ endif }\par
@@ -95,15 +112,15 @@
 
 \cvsection{\VAR{ labels.experience | tex }}
 %% for exp in cv.experience
-{\fontsize{11.4}{12.7}\selectfont\bfseries\color{cvblue}
-\VAR{ exp.start | ym }--\VAR{ exp.end | ym if exp.end else labels.present | tex }
+{\fontsize{10.4}{12.7}\selectfont\bfseries\color{cvblue}
+\VAR{ exp.start | ym } -- \VAR{ exp.end | ym if exp.end else labels.present | tex }
 \textperiodcentered{} \VAR{ exp.role | tex }
 \textperiodcentered{} \VAR{ exp.company | tex }\BLOCK{ if exp.location }
 \textperiodcentered{} \VAR{ exp.location | tex }\BLOCK{ endif }}\par
 %% for phase in exp.phases
 \vspace{1.0ex}
-{\fontsize{10.4}{12.2}\selectfont\bfseries\color{cvmuted}
-\VAR{ phase.start | ym }--\VAR{ phase.end | ym if phase.end else labels.present | tex }
+{\fontsize{9.4}{12}\selectfont\bfseries\color{cvmuted}
+\VAR{ phase.start | ym } -- \VAR{ phase.end | ym if phase.end else labels.present | tex }
 \textperiodcentered{} \VAR{ phase.title | tex }}\par
 %% if phase.company
 {\color{cvmuted}\VAR{ phase.company | tex }}\par
@@ -131,13 +148,15 @@
 {\footnotesize\color{cvmuted}\textbf{\color{cvblue}Tech:}
 \VAR{ exp.tech | map('tex') | join(' \\textperiodcentered{} ') }}\par
 %% endif
+%% if not loop.last
 \vspace{1.6ex}
+%% endif
 %% endfor
 
-\cvsection{Bildungsweg}
+\cvsection{Ausbildung\BLOCK{ if cv.languages } \& Sprachen\BLOCK{ endif }}
 %% for edu in cv.education
 {\bfseries\color{cvblue}
-\VAR{ edu.start | ym }--\VAR{ edu.end | ym if edu.end else labels.present | tex }
+\VAR{ edu.start | ym } -- \VAR{ edu.end | ym if edu.end else labels.present | tex }
 \textperiodcentered{} \VAR{ edu.degree | tex }}\par
 \VAR{ edu.institution | tex }\BLOCK{ if edu.location }
 \textperiodcentered{} \VAR{ edu.location | tex }\BLOCK{ endif }\par
@@ -145,20 +164,21 @@
 \vspace{1.0ex}
 %% endif
 %% endfor
-
-\BLOCK{ if cv.skills }
-\cvsection{Technische Kenntnisse}
-{\fontsize{10.4}{13.8}\selectfont
-%% for group, items in cv.skills.items()
-\textbf{\VAR{ group | tex }:} \VAR{ items | map('tex') | join(' \\textperiodcentered{} ') }\par
-%% endfor
 %% if cv.languages
-\textbf{Sprachen:}
+\vspace{1.0ex}
+{\bfseries\color{cvblue}Sprachen}\par
 %% for lang in cv.languages
 \VAR{ lang.name | tex } (\VAR{ labels.native if lang.level.value == 'native' else (labels.fluent if lang.level.value == 'fluent' else lang.level.value) | tex })\BLOCK{ if not loop.last } \textperiodcentered{} \BLOCK{ endif }
 %% endfor
 \par
 %% endif
+
+\BLOCK{ if cv.skills }
+\cvsection{Technische Kenntnisse}
+{\fontsize{10.4}{14}\selectfont
+%% for group, items in cv.skills.items()
+\cvlabel{\VAR{ group | tex }}\VAR{ items | map('tex') | join(' \\textperiodcentered{} ') }\par
+%% endfor
 }
 \BLOCK{ endif }
 

@@ -187,7 +187,7 @@ class Theme(Base):
     sidebar_bg: HexColor = "#EEF2F7"
     pip_off: HexColor = "#D6DCE6"
     font_main: str = "TeX Gyre Pagella"
-    font_sans: str = "TeX Gyre Heros"
+    font_sans: str = "Inter"
     section_rule_gap_ex: float = 0.6
     side_rule_gap_ex: float = 0.5
     footer_band_mm: float = 16

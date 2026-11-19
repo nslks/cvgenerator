@@ -12,7 +12,7 @@ TEMPLATE_FILE = "cv.tex.j2"
 
 LABELS = {
     "de": {
-        "document_language": "german", "profile": "Profil", "experience": "Erfahrung",
+        "document_language": "german", "profile": "Profil", "experience": "Berufserfahrung",
         "project_experience": "Projekterfahrung", "certificates": "Zertifikate",
         "present": "heute", "cv": "Lebenslauf", "page": "Seite", "phone": "Tel.",
         "email": "Email", "birth_date": "Geburtsdatum", "address": "Anschrift",
