@@ -1,0 +1,17 @@
+services:
+  cv:
+    # Prebuilt by .github/workflows/image.yml. After changing the Dockerfile,
+    # build it locally under the same name: docker build -t ghcr.io/nslks/cvgenerator .
+    image: ghcr.io/nslks/cvgenerator:latest
+    # Runs as you, so output/ does not end up owned by root.
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - .:/work
+    environment:
+      # Use the mounted templates, not the copy baked into the image, so
+      # editing a template takes effect on the next run without a rebuild.
+      CVGENERATOR_TEMPLATES: /work/templates
+      # Same rule for the package itself: PYTHONPATH precedes site-packages, so
+      # the mounted sources win over the wheel installed in /opt/venv. Without
+      # this, `build: .` silently keeps serving a stale image after src/ changes.
+      PYTHONPATH: /work/src

@@ -1,0 +1,172 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage[a4paper,top=11mm,bottom=11mm,left=15mm,right=15mm]{geometry}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{accent}{HTML}{\VAR{ cv.theme.accent.lstrip('#') | upper }}
+
+%# fontspec defaults to Latin Modern; naming it explicitly would depend on fontconfig
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{2em}
+\pagestyle{empty}
+
+\titleformat{\section}{\normalsize\bfseries\color{accent}}{}{0pt}{}[{\color{accent}\titlerule[0.7pt]}]
+\titlespacing*{\section}{0pt}{0.62em}{0.28em}
+
+\newlist{points}{itemize}{1}
+\setlist[points]{leftmargin=1.15em,itemsep=0.05em,topsep=0.08em,partopsep=0pt,parsep=0pt,label=\textcolor{accent}{\textbullet}}
+
+%# role/degree, company/institution, period, location
+\newcommand{\entryhead}[4]{%
+  \textbf{#1}\hfill{\small #3}\\%
+  \textit{#2}\hfill{\small #4}\par\vspace{0.08em}}
+
+\begin{document}
+
+\#{ ---------- Header ---------- }
+{\LARGE\bfseries\color{accent}\VAR{ cv.header.name | tex }}\hfill
+{\large \VAR{ cv.header.title | tex }}\par\vspace{0.25em}
+%% set c = cv.header.contact
+%% set parts = []
+%% do parts.append(c.location | tex)
+%% do parts.append('\\href{mailto:' ~ c.email ~ '}{' ~ (c.email | tex) ~ '}')
+%% if c.phone
+%% do parts.append(c.phone | tex)
+%% endif
+%% if c.birth_date
+%% do parts.append(('Geb. ' ~ c.birth_date.strftime('%d.%m.%Y')) | tex)
+%% endif
+%% if c.linkedin
+%% do parts.append('\\href{' ~ c.linkedin ~ '}{LinkedIn}')
+%% endif
+%% if c.github
+%% do parts.append('\\href{' ~ c.github ~ '}{GitHub}')
+%% endif
+%% if c.website
+%% do parts.append('\\href{' ~ c.website ~ '}{Website}')
+%% endif
+{\small \VAR{ parts | join(' $\\cdot$ ') }}\par
+
+\#{ ---------- Profil ---------- }
+%% if cv.summary
+\section*{Profil}
+{\small \VAR{ cv.summary | tex }}
+%% endif
+
+\#{ ---------- Berufserfahrung ---------- }
+%% if cv.experience
+\section*{Berufserfahrung}
+%% for exp in cv.experience
+\entryhead{\VAR{ exp.role | tex }}{\VAR{ exp.company | tex }}{\VAR{ exp.start | ym } -- \VAR{ exp.end | ym if exp.end else 'heute' }}{\VAR{ exp.location | tex if exp.location else '' }}
+%% for phase in exp.phases
+\textbf{\VAR{ phase.start.year }--\VAR{ phase.end.year if phase.end else 'heute' } · \VAR{ phase.title | tex }}\par
+%% if phase.company
+\textit{\VAR{ phase.company | tex }}\par
+%% endif
+%% if phase.achievements
+\begin{points}
+%% for a in phase.achievements
+  \item \VAR{ a.title | tex }\BLOCK{ if a.impact } --- \textit{\VAR{ a.impact | tex }}\BLOCK{ endif }
+%% endfor
+\end{points}
+%% endif
+%% if phase.tech
+{\small\textit{Tech:} \VAR{ phase.tech | map('tex') | join(', ') }}\par
+%% endif
+\vspace{0.18em}
+%% endfor
+%% if exp.achievements
+\begin{points}
+%% for a in exp.achievements
+  \item \VAR{ a.title | tex }\BLOCK{ if a.impact } --- \textit{\VAR{ a.impact | tex }}\BLOCK{ endif }
+%% endfor
+\end{points}
+%% endif
+%% if exp.tech
+{\small\textit{Tech:} \VAR{ exp.tech | map('tex') | join(', ') }}\par
+%% endif
+\vspace{0.28em}
+%% endfor
+%% endif
+
+\#{ ---------- Projekte ---------- }
+%% if cv.projects
+\section*{Projekte}
+%% for p in cv.projects
+\textbf{\VAR{ p.name | tex }}\BLOCK{ if p.url } {\small(\href{\VAR{ p.url }}{\VAR{ p.url.host | tex }})}\BLOCK{ endif }\BLOCK{ if p.tagline } --- \textit{\VAR{ p.tagline | tex }}\BLOCK{ endif }\par
+%% if p.achievements
+\begin{points}
+%% for a in p.achievements
+  \item \VAR{ a.title | tex }\BLOCK{ if a.impact } --- \textit{\VAR{ a.impact | tex }}\BLOCK{ endif }
+%% endfor
+\end{points}
+%% endif
+%% if p.tech
+{\small\textit{Tech:} \VAR{ p.tech | map('tex') | join(', ') }}\par
+%% endif
+\vspace{0.7em}
+%% endfor
+%% endif
+
+\#{ ---------- Kenntnisse ---------- }
+%% if cv.skills
+\section*{Kenntnisse}
+{\small
+%% for group, items in cv.skills.items()
+\textbf{\VAR{ group | tex }:} \VAR{ items | map('tex') | join(', ') }\par
+%% endfor
+}
+%% endif
+
+\#{ ---------- Ausbildung ---------- }
+%% if cv.education
+\section*{Ausbildung}
+%% for edu in cv.education
+\entryhead{\VAR{ edu.degree | tex }}{\VAR{ edu.institution | tex }}{\VAR{ edu.start | ym } -- \VAR{ edu.end | ym if edu.end else 'heute' }}{\VAR{ edu.location | tex if edu.location else '' }}
+%% if edu.notes
+\begin{points}
+%% for n in edu.notes
+  \item \VAR{ n | tex }
+%% endfor
+\end{points}
+%% endif
+\vspace{0.15em}
+%% endfor
+%% endif
+
+\#{ ---------- Sprachen ---------- }
+%% if cv.languages
+\vspace{-0.8em}
+\hfill{\small
+%% for lang in cv.languages
+\textbf{\VAR{ lang.name | tex }} (\VAR{ 'Fließend' if lang.level.value == 'fluent' else lang.level.value | tex })\BLOCK{ if not loop.last } $\cdot$ \BLOCK{ endif }
+%% endfor
+}\par
+%% endif
+
+\#{ ---------- Zertifikate ---------- }
+%% if cv.certifications
+\section*{Zertifikate}
+\begin{points}
+%% for cert in cv.certifications
+  \item \BLOCK{ if cert.url }\href{\VAR{ cert.url }}{\VAR{ cert.name | tex }}\BLOCK{ else }\VAR{ cert.name | tex }\BLOCK{ endif } --- \VAR{ cert.issuer | tex }\BLOCK{ if cert.year } (\VAR{ cert.year })\BLOCK{ endif }
+%% endfor
+\end{points}
+%% endif
+
+\#{ ---------- Vorträge ---------- }
+%% if cv.talks
+\section*{Vorträge}
+\begin{points}
+%% for talk in cv.talks
+  \item \BLOCK{ if talk.url }\href{\VAR{ talk.url }}{\VAR{ talk.title | tex }}\BLOCK{ else }\VAR{ talk.title | tex }\BLOCK{ endif }\BLOCK{ if talk.venue } --- \VAR{ talk.venue | tex }\BLOCK{ endif }\BLOCK{ if talk.year } (\VAR{ talk.year })\BLOCK{ endif }
+%% endfor
+\end{points}
+%% endif
+
+\end{document}

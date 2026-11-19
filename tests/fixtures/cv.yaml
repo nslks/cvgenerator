@@ -1,0 +1,116 @@
+# Fixture for the snapshot tests. Deliberately independent of data/cv.yaml.
+header:
+  name: Erika Musterfrau
+  title: Softwareentwicklerin – Backend & Platform
+  contact:
+    location: Berlin
+    address:
+      - Beispielstraße 12
+      - 10115 Berlin
+    email: erika@example.com
+    phone: "+49 151 12345678"
+    linkedin: https://www.linkedin.com/in/erika-musterfrau
+    github: https://github.com/erikam
+
+summary: >
+  Softwareentwicklerin mit 6+ Jahren Erfahrung in verteilten Backend-Systemen.
+  Fokus auf Platform Engineering, DevOps und Migrationsprojekten. Baut gerne
+  Werkzeuge, die Teams schneller machen.
+
+experience:
+  - role: Senior Backend Engineer
+    company: Acme GmbH
+    location: Berlin
+    start: 2022-04
+    end: null  # present
+    achievements:
+      - title: Migration einer Legacy-Monolith-API auf event-getriebene Microservices
+        impact: p99-Latenz von 850 ms auf 120 ms gesenkt, Deploy-Frequenz verdreifacht
+      - title: CI/CD-Pipeline-Templates für 12 Teams standardisiert
+        impact: Onboarding neuer Services von 2 Tagen auf 20 Minuten reduziert
+    tech: [Python, FastAPI, PostgreSQL, Kafka, Kubernetes, Terraform]
+
+  - role: Backend Engineer
+    company: Beta Solutions AG
+    location: Hamburg
+    start: 2020-04
+    end: 2022-03
+    achievements:
+      - title: Entwicklung eines Zahlungs-Backends nach DDD-Prinzipien
+        impact: 3M+ Transaktionen/Monat ohne einen einzigen Datenverlust-Incident
+    tech: [C#, .NET, MSSQL, RabbitMQ]
+
+projects:
+  - name: opencv-tooling
+    tagline: CLI-Toolbox für reproduzierbare LaTeX-Lebensläufe
+    url: https://github.com/erikam/opencv-tooling
+    achievements:
+      - title: YAML → Pydantic → Jinja2 → XeLaTeX Pipeline
+    tech: [Python, XeLaTeX, Docker]
+
+skills:
+  Sprachen: [Python, C#, TypeScript]
+  Backend: [FastAPI, .NET, PostgreSQL, Kafka]
+  DevOps: [Docker, Kubernetes, Terraform, GitHub Actions]
+  Methoden: [DDD, TDD, Trunk-Based Development, Scrum]
+
+education:
+  - degree: B.Sc. Informatik
+    institution: TU Berlin
+    start: 2016-10
+    end: 2020-03
+    notes:
+      - Abschlussnote 1,8
+      - Bachelorarbeit über verteilte Konsensverfahren
+
+languages:
+  - name: Deutsch
+    level: native
+  - name: Englisch
+    level: C1
+  - name: Türkisch
+    level: C1
+
+certifications: []
+talks: []
+
+tools:
+  - name: Docker
+    level: täglich
+  - name: Kubernetes
+    level: fortgeschritten
+  - name: Terraform
+    level: fortgeschritten
+  - name: Grafana
+    level: solide
+
+# level must not exceed max_level.
+skill_matrix:
+  max_level: 5
+  rows:
+    - skill: Python
+      years: "6+"
+      level: 5
+    - skill: FastAPI
+      years: "4"
+      level: 5
+    - skill: PostgreSQL
+      years: "6"
+      level: 4
+    - skill: Kafka
+      years: "3"
+      level: 4
+    - skill: Kubernetes
+      years: "3"
+      level: 3
+    - skill: C# / .NET
+      years: "2"
+      level: 3
+
+# Ort/Datum/Unterschrift block. Date is always today.
+footer:
+  city: Berlin
+  # signature: assets/unterschrift.png
+
+theme:
+  accent: "#2A5CAA"

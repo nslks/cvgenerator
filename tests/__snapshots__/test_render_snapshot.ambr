@@ -1,0 +1,233 @@
+# serializer version: 1
+# name: test_template_matches_snapshot[modern]
+  '''
+  \documentclass[10pt,a4paper]{article}
+  
+  \usepackage{fontspec}
+  \usepackage[a4paper,top=11mm,bottom=11mm,left=15mm,right=15mm]{geometry}
+  \usepackage{xcolor}
+  \usepackage{enumitem}
+  \usepackage{titlesec}
+  \usepackage[hidelinks]{hyperref}
+  
+  \definecolor{accent}{HTML}{2A5CAA}
+  
+  
+  \setlength{\parindent}{0pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\emergencystretch}{2em}
+  \pagestyle{empty}
+  
+  \titleformat{\section}{\normalsize\bfseries\color{accent}}{}{0pt}{}[{\color{accent}\titlerule[0.7pt]}]
+  \titlespacing*{\section}{0pt}{0.62em}{0.28em}
+  
+  \newlist{points}{itemize}{1}
+  \setlist[points]{leftmargin=1.15em,itemsep=0.05em,topsep=0.08em,partopsep=0pt,parsep=0pt,label=\textcolor{accent}{\textbullet}}
+  
+  
+  \newcommand{\entryhead}[4]{%
+    \textbf{#1}\hfill{\small #3}\\%
+    \textit{#2}\hfill{\small #4}\par\vspace{0.08em}}
+  
+  \begin{document}
+  
+  
+  {\LARGE\bfseries\color{accent}Erika Musterfrau}\hfill
+  {\large Softwareentwicklerin – Backend \& Platform}\par\vspace{0.25em}
+  {\small Berlin $\cdot$ \href{mailto:erika@example.com}{erika@example.com} $\cdot$ +49 151 12345678 $\cdot$ \href{https://www.linkedin.com/in/erika-musterfrau}{LinkedIn} $\cdot$ \href{https://github.com/erikam}{GitHub}}\par
+  
+  
+  \section*{Profil}
+  {\small Softwareentwicklerin mit 6+ Jahren Erfahrung in verteilten Backend-Systemen. Fokus auf Platform Engineering, DevOps und Migrationsprojekten. Baut gerne Werkzeuge, die Teams schneller machen.
+  }
+  
+  \section*{Berufserfahrung}
+  \entryhead{Senior Backend Engineer}{Acme GmbH}{04/2022 -- heute}{Berlin}
+  \begin{points}
+    \item Migration einer Legacy-Monolith-API auf event-getriebene Microservices --- \textit{p99-Latenz von 850 ms auf 120 ms gesenkt, Deploy-Frequenz verdreifacht}
+    \item CI/CD-Pipeline-Templates für 12 Teams standardisiert --- \textit{Onboarding neuer Services von 2 Tagen auf 20 Minuten reduziert}
+  \end{points}
+  {\small\textit{Tech:} Python, FastAPI, PostgreSQL, Kafka, Kubernetes, Terraform}\par
+  \vspace{0.28em}
+  \entryhead{Backend Engineer}{Beta Solutions AG}{04/2020 -- 03/2022}{Hamburg}
+  \begin{points}
+    \item Entwicklung eines Zahlungs-Backends nach DDD-Prinzipien --- \textit{3M+ Transaktionen/Monat ohne einen einzigen Datenverlust-Incident}
+  \end{points}
+  {\small\textit{Tech:} C\#, .NET, MSSQL, RabbitMQ}\par
+  \vspace{0.28em}
+  
+  \section*{Projekte}
+  \textbf{opencv-tooling} {\small(\href{https://github.com/erikam/opencv-tooling}{github.com})} --- \textit{CLI-Toolbox für reproduzierbare LaTeX-Lebensläufe}\par
+  \begin{points}
+    \item YAML → Pydantic → Jinja2 → XeLaTeX Pipeline
+  \end{points}
+  {\small\textit{Tech:} Python, XeLaTeX, Docker}\par
+  \vspace{0.7em}
+  
+  \section*{Kenntnisse}
+  {\small
+  \textbf{Sprachen:} Python, C\#, TypeScript\par
+  \textbf{Backend:} FastAPI, .NET, PostgreSQL, Kafka\par
+  \textbf{DevOps:} Docker, Kubernetes, Terraform, GitHub Actions\par
+  \textbf{Methoden:} DDD, TDD, Trunk-Based Development, Scrum\par
+  }
+  
+  \section*{Ausbildung}
+  \entryhead{B.Sc. Informatik}{TU Berlin}{10/2016 -- 03/2020}{}
+  \begin{points}
+    \item Abschlussnote 1,8
+    \item Bachelorarbeit über verteilte Konsensverfahren
+  \end{points}
+  \vspace{0.15em}
+  
+  \vspace{-0.8em}
+  \hfill{\small
+  \textbf{Deutsch} (native) $\cdot$ 
+  \textbf{Englisch} (C1) $\cdot$ 
+  \textbf{Türkisch} (C1)
+  }\par
+  
+  
+  \end{document}
+  
+  '''
+# ---
+# name: test_template_matches_snapshot[single]
+  '''
+  \documentclass[10pt,a4paper]{article}
+  
+  \usepackage{fontspec}
+  \usepackage{polyglossia}
+  \setdefaultlanguage{german}
+  \defaultfontfeatures{Ligatures=TeX}
+  \setmainfont{TeX Gyre Heros}
+  \setsansfont{TeX Gyre Heros}
+  
+  \usepackage[a4paper,top=10mm,bottom=10mm,left=15mm,right=15mm]{geometry}
+  \usepackage{xcolor}
+  \usepackage{graphicx}
+  \usepackage{tikz}
+  \usepackage{enumitem}
+  \usepackage{tabularx}
+  \usepackage{array}
+  \usepackage{microtype}
+  \usepackage[hidelinks]{hyperref}
+  \usetikzlibrary{shadows}
+  
+  \definecolor{cvblue}{HTML}{0871BA}
+  \definecolor{cvtext}{HTML}{303033}
+  \definecolor{cvmuted}{HTML}{68686C}
+  \definecolor{cvbrush}{HTML}{8EBBE1}
+  
+  \color{cvtext}
+  \pagestyle{empty}
+  \setlength{\parindent}{0pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\emergencystretch}{3em}
+  % No hyphenation: split words break keyword matching in ATS parsers.
+  \hyphenpenalty=10000
+  \exhyphenpenalty=10000
+  \renewcommand{\arraystretch}{1}
+  
+  \newcommand{\brushrule}{%
+    \begin{tikzpicture}[x=\textwidth,y=1pt]
+      \path[fill=cvbrush]
+        (0,0.2) -- (.04,.9) -- (.12,2.0) -- (.25,1.3) --
+        (.40,2.3) -- (.57,1.5) -- (.74,2.1) -- (.91,1.7) --
+        (1,.7) -- (.96,-.15) -- (.78,-.55) -- (.58,-.2) --
+        (.37,-.7) -- (.17,-.15) -- (.05,-.45) -- cycle;
+    \end{tikzpicture}\par
+  }
+  
+  \newcommand{\cvsection}[1]{%
+    \vspace{2.4ex}%
+    {\fontsize{14}{15.5}\selectfont\bfseries\color{cvblue}\MakeUppercase{#1}}\par\nobreak
+    \vspace{-0.1ex}\brushrule\vspace{1.2ex}%
+  }
+  
+  % Ragged right: without hyphenation, justified bullets open wide word gaps.
+  % Spaces may shrink but never stretch, and extra lines are expensive, so
+  % bullets keep the density of justified text.
+  \newcommand{\cvragged}{%
+    \raggedright
+    \spaceskip=\fontdimen2\font plus 0pt minus \fontdimen4\font
+    \xspaceskip=\spaceskip
+    \linepenalty=1000\relax}
+  \newenvironment{cvpoints}{%
+    \begin{itemize}[leftmargin=1.05em,labelsep=.45em,itemsep=3.2pt,topsep=2.8pt,
+      partopsep=0pt,parsep=0pt,before=\cvragged,label={\color{cvtext}\raisebox{.15ex}{\scriptsize--}}]%
+  }{\end{itemize}}
+  
+  \begin{document}
+  \fontsize{11.4}{15.1}\selectfont
+  
+  % Header: the document remains single-column; the portrait is a compact identity
+  % element inside the header rather than a permanent sidebar.
+  \begin{tabularx}{\textwidth}{@{}X >{\raggedleft\arraybackslash}m{27mm}@{}}
+    \begin{minipage}[c]{\linewidth}
+      {\fontsize{25}{27}\selectfont\bfseries\color{cvblue}\MakeUppercase{Erika Musterfrau}}\par
+      \vspace{0.4ex}
+      {\fontsize{12.2}{13.6}\selectfont\bfseries Softwareentwicklerin – Backend \& Platform}\par
+      \vspace{1.0ex}
+      {\fontsize{10.4}{13}\selectfont\color{cvmuted}
+        Berlin \textperiodcentered{}
+        \href{mailto:erika@example.com}{erika@example.com}
+        \textperiodcentered{} +49 151 12345678\par
+  Beispielstraße 12, 10115 Berlin
+  
+      }
+    \end{minipage}
+    &
+  
+  \end{tabularx}
+  \vspace{-0.3ex}
+  \brushrule
+  
+  \cvsection{Erfahrung}
+  {\fontsize{11.4}{12.7}\selectfont\bfseries\color{cvblue}
+  04/2022--heute
+  \textperiodcentered{} Senior Backend Engineer
+  \textperiodcentered{} Acme GmbH
+  \textperiodcentered{} Berlin}\par
+  \begin{cvpoints}
+    \item Migration einer Legacy-Monolith-API auf event-getriebene Microservices p99-Latenz von 850 ms auf 120 ms gesenkt, Deploy-Frequenz verdreifacht
+    \item CI/CD-Pipeline-Templates für 12 Teams standardisiert Onboarding neuer Services von 2 Tagen auf 20 Minuten reduziert
+  \end{cvpoints}
+  {\footnotesize\color{cvmuted}\textbf{\color{cvblue}Tech:}
+  Python \textperiodcentered{} FastAPI \textperiodcentered{} PostgreSQL \textperiodcentered{} Kafka \textperiodcentered{} Kubernetes \textperiodcentered{} Terraform}\par
+  \vspace{1.6ex}
+  {\fontsize{11.4}{12.7}\selectfont\bfseries\color{cvblue}
+  04/2020--03/2022
+  \textperiodcentered{} Backend Engineer
+  \textperiodcentered{} Beta Solutions AG
+  \textperiodcentered{} Hamburg}\par
+  \begin{cvpoints}
+    \item Entwicklung eines Zahlungs-Backends nach DDD-Prinzipien 3M+ Transaktionen/Monat ohne einen einzigen Datenverlust-Incident
+  \end{cvpoints}
+  {\footnotesize\color{cvmuted}\textbf{\color{cvblue}Tech:}
+  C\# \textperiodcentered{} .NET \textperiodcentered{} MSSQL \textperiodcentered{} RabbitMQ}\par
+  \vspace{1.6ex}
+  \cvsection{Bildungsweg}
+  {\bfseries\color{cvblue}
+  10/2016--03/2020
+  \textperiodcentered{} B.Sc. Informatik}\par
+  TU Berlin\par
+  
+  \cvsection{Technische Kenntnisse}
+  {\fontsize{10.4}{13.8}\selectfont
+  \textbf{Sprachen:} Python \textperiodcentered{} C\# \textperiodcentered{} TypeScript\par
+  \textbf{Backend:} FastAPI \textperiodcentered{} .NET \textperiodcentered{} PostgreSQL \textperiodcentered{} Kafka\par
+  \textbf{DevOps:} Docker \textperiodcentered{} Kubernetes \textperiodcentered{} Terraform \textperiodcentered{} GitHub Actions\par
+  \textbf{Methoden:} DDD \textperiodcentered{} TDD \textperiodcentered{} Trunk-Based Development \textperiodcentered{} Scrum\par
+  \textbf{Sprachen:}
+  Deutsch (Muttersprache) \textperiodcentered{} 
+  Englisch (C1) \textperiodcentered{} 
+  Türkisch (C1)
+  \par
+  }
+  
+  
+  \end{document}
+  
+  '''
+# ---

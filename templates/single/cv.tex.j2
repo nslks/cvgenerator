@@ -1,0 +1,165 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{\VAR{ labels.document_language }}
+\defaultfontfeatures{Ligatures=TeX}
+\setmainfont{\VAR{ cv.theme.font_sans }}
+\setsansfont{\VAR{ cv.theme.font_sans }}
+
+\usepackage[a4paper,top=10mm,bottom=10mm,left=15mm,right=15mm]{geometry}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usetikzlibrary{shadows}
+
+\definecolor{cvblue}{HTML}{0871BA}
+\definecolor{cvtext}{HTML}{303033}
+\definecolor{cvmuted}{HTML}{68686C}
+\definecolor{cvbrush}{HTML}{8EBBE1}
+
+\color{cvtext}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{3em}
+% No hyphenation: split words break keyword matching in ATS parsers.
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\renewcommand{\arraystretch}{1}
+
+\newcommand{\brushrule}{%
+  \begin{tikzpicture}[x=\textwidth,y=1pt]
+    \path[fill=cvbrush]
+      (0,0.2) -- (.04,.9) -- (.12,2.0) -- (.25,1.3) --
+      (.40,2.3) -- (.57,1.5) -- (.74,2.1) -- (.91,1.7) --
+      (1,.7) -- (.96,-.15) -- (.78,-.55) -- (.58,-.2) --
+      (.37,-.7) -- (.17,-.15) -- (.05,-.45) -- cycle;
+  \end{tikzpicture}\par
+}
+
+\newcommand{\cvsection}[1]{%
+  \vspace{2.4ex}%
+  {\fontsize{14}{15.5}\selectfont\bfseries\color{cvblue}\MakeUppercase{#1}}\par\nobreak
+  \vspace{-0.1ex}\brushrule\vspace{1.2ex}%
+}
+
+% Ragged right: without hyphenation, justified bullets open wide word gaps.
+% Spaces may shrink but never stretch, and extra lines are expensive, so
+% bullets keep the density of justified text.
+\newcommand{\cvragged}{%
+  \raggedright
+  \spaceskip=\fontdimen2\font plus 0pt minus \fontdimen4\font
+  \xspaceskip=\spaceskip
+  \linepenalty=1000\relax}
+\newenvironment{cvpoints}{%
+  \begin{itemize}[leftmargin=1.05em,labelsep=.45em,itemsep=3.2pt,topsep=2.8pt,
+    partopsep=0pt,parsep=0pt,before=\cvragged,label={\color{cvtext}\raisebox{.15ex}{\scriptsize--}}]%
+}{\end{itemize}}
+
+\begin{document}
+\fontsize{11.4}{15.1}\selectfont
+
+% Header: the document remains single-column; the portrait is a compact identity
+% element inside the header rather than a permanent sidebar.
+\begin{tabularx}{\textwidth}{@{}X >{\raggedleft\arraybackslash}m{27mm}@{}}
+  \begin{minipage}[c]{\linewidth}
+    {\fontsize{25}{27}\selectfont\bfseries\color{cvblue}\MakeUppercase{\VAR{ cv.header.name | tex }}}\par
+    \vspace{0.4ex}
+    {\fontsize{12.2}{13.6}\selectfont\bfseries \VAR{ cv.header.title | tex }}\par
+    \vspace{1.0ex}
+    %% set c = cv.header.contact
+    {\fontsize{10.4}{13}\selectfont\color{cvmuted}
+      \VAR{ c.location | tex } \textperiodcentered{}
+      \href{mailto:\VAR{ c.email }}{\VAR{ c.email | tex }}\BLOCK{ if c.phone }
+      \textperiodcentered{} \VAR{ c.phone | tex }\BLOCK{ endif }\par
+      \BLOCK{ if c.address }\VAR{ c.address | map('tex') | join(', ') }\BLOCK{ endif }
+      \BLOCK{ if c.birth_date }\textperiodcentered{} Geb. \VAR{ c.birth_date.strftime('%d.%m.%Y') | tex }\BLOCK{ endif }
+    }
+  \end{minipage}
+  &
+  \BLOCK{ if photo }
+  \begin{tikzpicture}
+    \clip (0,0) circle (12.5mm);
+    \node[inner sep=0pt] at (0,0) {\includegraphics[width=25mm]{\VAR{ photo }}};
+  \end{tikzpicture}
+  \BLOCK{ endif }
+\end{tabularx}
+\vspace{-0.3ex}
+\brushrule
+
+\cvsection{\VAR{ labels.experience | tex }}
+%% for exp in cv.experience
+{\fontsize{11.4}{12.7}\selectfont\bfseries\color{cvblue}
+\VAR{ exp.start | ym }--\VAR{ exp.end | ym if exp.end else labels.present | tex }
+\textperiodcentered{} \VAR{ exp.role | tex }
+\textperiodcentered{} \VAR{ exp.company | tex }\BLOCK{ if exp.location }
+\textperiodcentered{} \VAR{ exp.location | tex }\BLOCK{ endif }}\par
+%% for phase in exp.phases
+\vspace{1.0ex}
+{\fontsize{10.4}{12.2}\selectfont\bfseries\color{cvmuted}
+\VAR{ phase.start | ym }--\VAR{ phase.end | ym if phase.end else labels.present | tex }
+\textperiodcentered{} \VAR{ phase.title | tex }}\par
+%% if phase.company
+{\color{cvmuted}\VAR{ phase.company | tex }}\par
+%% endif
+%% if phase.achievements
+\begin{cvpoints}
+%% for a in phase.achievements
+  \item \VAR{ a.title | tex }\BLOCK{ if a.impact } \VAR{ a.impact | tex }\BLOCK{ endif }
+%% endfor
+\end{cvpoints}
+%% endif
+%% if phase.tech
+{\footnotesize\color{cvmuted}\textbf{\color{cvblue}Tech:}
+\VAR{ phase.tech | map('tex') | join(' \\textperiodcentered{} ') }}\par
+%% endif
+%% endfor
+%% if exp.achievements
+\begin{cvpoints}
+%% for a in exp.achievements
+  \item \VAR{ a.title | tex }\BLOCK{ if a.impact } \VAR{ a.impact | tex }\BLOCK{ endif }
+%% endfor
+\end{cvpoints}
+%% endif
+%% if exp.tech
+{\footnotesize\color{cvmuted}\textbf{\color{cvblue}Tech:}
+\VAR{ exp.tech | map('tex') | join(' \\textperiodcentered{} ') }}\par
+%% endif
+\vspace{1.6ex}
+%% endfor
+
+\cvsection{Bildungsweg}
+%% for edu in cv.education
+{\bfseries\color{cvblue}
+\VAR{ edu.start | ym }--\VAR{ edu.end | ym if edu.end else labels.present | tex }
+\textperiodcentered{} \VAR{ edu.degree | tex }}\par
+\VAR{ edu.institution | tex }\BLOCK{ if edu.location }
+\textperiodcentered{} \VAR{ edu.location | tex }\BLOCK{ endif }\par
+%% if not loop.last
+\vspace{1.0ex}
+%% endif
+%% endfor
+
+\BLOCK{ if cv.skills }
+\cvsection{Technische Kenntnisse}
+{\fontsize{10.4}{13.8}\selectfont
+%% for group, items in cv.skills.items()
+\textbf{\VAR{ group | tex }:} \VAR{ items | map('tex') | join(' \\textperiodcentered{} ') }\par
+%% endfor
+%% if cv.languages
+\textbf{Sprachen:}
+%% for lang in cv.languages
+\VAR{ lang.name | tex } (\VAR{ labels.native if lang.level.value == 'native' else (labels.fluent if lang.level.value == 'fluent' else lang.level.value) | tex })\BLOCK{ if not loop.last } \textperiodcentered{} \BLOCK{ endif }
+%% endfor
+\par
+%% endif
+}
+\BLOCK{ endif }
+
+\end{document}
